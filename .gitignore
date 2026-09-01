@@ -1,0 +1,6 @@
+participants.db
+backups/
+qr_codes/
+venv/
+__pycache__/
+*.pyc

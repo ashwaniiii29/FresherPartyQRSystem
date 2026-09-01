@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Admin Login | {{ event_name }}
+    </title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <div class="card">
+
+
+        <!-- ADMIN HEADER -->
+
+        <div class="brand">
+
+            <div class="brand-badge">
+                🔐
+            </div>
+
+            <h1>
+                Admin Login
+            </h1>
+
+            <p class="subtitle">
+                {{ event_name }} — Administration
+            </p>
+
+        </div>
+
+
+        <!-- LOGIN ERROR -->
+
+        {% if error %}
+
+        <div class="alert alert-error">
+
+            <strong>
+                {{ error }}
+            </strong>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- LOGIN FORM -->
+
+        <form
+            method="POST"
+            action="{{ url_for('admin_login') }}"
+        >
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter admin username"
+                    autocomplete="username"
+                    required
+                    autofocus
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter admin password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                🔓 Login to Dashboard
+            </button>
+
+
+        </form>
+
+
+        <!-- BACK TO REGISTRATION -->
+
+        <p class="admin-link">
+
+            <a href="{{ url_for('index') }}">
+                ← Back to Registration
+            </a>
+
+        </p>
+
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

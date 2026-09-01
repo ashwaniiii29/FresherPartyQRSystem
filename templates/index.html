@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ event_name }} - Registration</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <div class="card">
+
+
+        <!-- EVENT HEADER -->
+
+        <div class="brand">
+
+            <div class="brand-badge">
+                🎉
+            </div>
+
+            <h1>
+                {{ event_name }}
+            </h1>
+
+            <p class="subtitle">
+                Register now and receive your official entry QR pass instantly
+            </p>
+
+        </div>
+
+
+        <!-- ERROR MESSAGE -->
+
+        {% if errors %}
+
+        <div class="alert alert-error">
+
+            <strong>
+                Please fix the following:
+            </strong>
+
+            <ul>
+
+                {% for err in errors %}
+
+                <li>
+                    {{ err }}
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- REGISTRATION FORM -->
+
+        <form
+            id="registerForm"
+            method="POST"
+            action="{{ url_for('index') }}"
+            novalidate
+        >
+
+
+            <!-- NAME + EMAIL -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="e.g. Aarav Sharma"
+                        value="{{ form_data.get('name', '') }}"
+                        autocomplete="name"
+                        required
+                    >
+
+                    <span
+                        class="error-text"
+                        id="err-name">
+                    </span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        value="{{ form_data.get('email', '') }}"
+                        autocomplete="email"
+                        required
+                    >
+
+                    <span
+                        class="error-text"
+                        id="err-email">
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- MOBILE + STUDENT ID -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="mobile">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="mobile"
+                        name="mobile"
+                        placeholder="10-digit number"
+                        maxlength="10"
+                        value="{{ form_data.get('mobile', '') }}"
+                        autocomplete="tel"
+                        inputmode="numeric"
+                        required
+                    >
+
+                    <span
+                        class="error-text"
+                        id="err-mobile">
+                    </span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="student_id">
+                        College / Student ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="student_id"
+                        name="student_id"
+                        placeholder="e.g. BCA2024015"
+                        value="{{ form_data.get('student_id', '') }}"
+                        autocomplete="off"
+                        required
+                    >
+
+                    <span
+                        class="error-text"
+                        id="err-student_id">
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- COURSE + YEAR -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="course">
+                        Course
+                    </label>
+
+                    <select
+                        id="course"
+                        name="course"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            {% if not form_data.get('course') %}
+                            selected
+                            {% endif %}
+                            disabled
+                        >
+                            Select course
+                        </option>
+
+
+                        <option
+                            value="BCA"
+                            {% if form_data.get('course') == 'BCA' %}
+                            selected
+                            {% endif %}
+                        >
+                            BCA
+                        </option>
+
+
+                        <option
+                            value="BBA"
+                            {% if form_data.get('course') == 'BBA' %}
+                            selected
+                            {% endif %}
+                        >
+                            BBA
+                        </option>
+
+
+                        <option
+                            value="B.Com"
+                            {% if form_data.get('course') == 'B.Com' %}
+                            selected
+                            {% endif %}
+                        >
+                            B.Com
+                        </option>
+
+
+                        <option
+                            value="BA"
+                            {% if form_data.get('course') == 'BA' %}
+                            selected
+                            {% endif %}
+                        >
+                            BA
+                        </option>
+
+
+                        <option
+                            value="B.Sc"
+                            {% if form_data.get('course') == 'B.Sc' %}
+                            selected
+                            {% endif %}
+                        >
+                            B.Sc
+                        </option>
+
+
+                        <option
+                            value="Other"
+                            {% if form_data.get('course') == 'Other' %}
+                            selected
+                            {% endif %}
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <span
+                        class="error-text"
+                        id="err-course">
+                    </span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="year">
+                        Year
+                    </label>
+
+                    <select
+                        id="year"
+                        name="year"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            {% if not form_data.get('year') %}
+                            selected
+                            {% endif %}
+                            disabled
+                        >
+                            Select year
+                        </option>
+
+
+                        <option
+                            value="1st Year"
+                            {% if form_data.get('year') == '1st Year' %}
+                            selected
+                            {% endif %}
+                        >
+                            1st Year
+                        </option>
+
+
+                        <option
+                            value="2nd Year"
+                            {% if form_data.get('year') == '2nd Year' %}
+                            selected
+                            {% endif %}
+                        >
+                            2nd Year
+                        </option>
+
+
+                        <option
+                            value="3rd Year"
+                            {% if form_data.get('year') == '3rd Year' %}
+                            selected
+                            {% endif %}
+                        >
+                            3rd Year
+                        </option>
+
+                    </select>
+
+
+                    <span
+                        class="error-text"
+                        id="err-year">
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- GENDER -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select
+                        id="gender"
+                        name="gender"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            {% if not form_data.get('gender') %}
+                            selected
+                            {% endif %}
+                            disabled
+                        >
+                            Select gender
+                        </option>
+
+
+                        <option
+                            value="Male"
+                            {% if form_data.get('gender') == 'Male' %}
+                            selected
+                            {% endif %}
+                        >
+                            Male
+                        </option>
+
+
+                        <option
+                            value="Female"
+                            {% if form_data.get('gender') == 'Female' %}
+                            selected
+                            {% endif %}
+                        >
+                            Female
+                        </option>
+
+
+                        <option
+                            value="Other"
+                            {% if form_data.get('gender') == 'Other' %}
+                            selected
+                            {% endif %}
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <span
+                        class="error-text"
+                        id="err-gender">
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                🎟️ Register &amp; Get QR Pass
+            </button>
+
+
+        </form>
+
+
+        <!-- ADMIN LOGIN -->
+
+        <p class="admin-link">
+
+            <a href="{{ url_for('admin_login') }}">
+                Admin Login →
+            </a>
+
+        </p>
+
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

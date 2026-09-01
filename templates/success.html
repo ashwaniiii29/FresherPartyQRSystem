@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Registration Successful | {{ event_name }}
+    </title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <div class="card success-card" id="printArea">
+
+
+        <!-- SUCCESS HEADER -->
+
+        <div class="success-icon">
+            ✅
+        </div>
+
+
+        <h1>
+            Registration Successful!
+        </h1>
+
+
+        <p class="subtitle">
+            Your Fresher Party entry QR pass is ready
+        </p>
+
+
+        <!-- QR CODE -->
+
+        <div class="qr-box">
+
+            <img
+                src="{{ url_for('qr_image', filename=participant['qr_filename']) }}"
+                alt="Fresher Party QR Code"
+                id="qrImage"
+            >
+
+        </div>
+
+
+        <p class="subtitle">
+            Show this QR code at the entrance for check-in
+        </p>
+
+
+        <!-- REGISTRATION DETAILS -->
+
+        <div class="detail-list">
+
+
+            <div class="detail-row">
+
+                <span>
+                    Event
+                </span>
+
+                <strong>
+                    {{ event_name }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+                    Registration ID
+                </span>
+
+                <strong>
+                    {{ participant['registration_id'] }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+                    Name
+                </span>
+
+                <strong>
+                    {{ participant['name'] }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+                    Course
+                </span>
+
+                <strong>
+                    {{ participant['course'] }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+                    Year
+                </span>
+
+                <strong>
+                    {{ participant['year'] }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+                    Registered On
+                </span>
+
+                <strong>
+                    {{ participant['registration_date'] }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ACTION BUTTONS -->
+
+        <div class="btn-row no-print">
+
+
+            <a
+                href="{{ url_for('qr_image', filename=participant['qr_filename']) }}"
+                download
+                class="btn-secondary"
+            >
+                ⬇ Download QR
+            </a>
+
+
+            <button
+                type="button"
+                onclick="window.print()"
+                class="btn-secondary"
+            >
+                🖨 Print QR
+            </button>
+
+
+            <a
+                href="{{ url_for('index') }}"
+                class="btn-primary"
+            >
+                ← Back to Registration
+            </a>
+
+
+        </div>
+
+
+        <!-- ADMIN LINK -->
+
+        <p class="admin-link no-print">
+
+            <a href="{{ url_for('admin_login') }}">
+                Admin Login →
+            </a>
+
+        </p>
+
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

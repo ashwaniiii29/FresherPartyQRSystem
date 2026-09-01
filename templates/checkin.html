@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Check-In | {{ event_name }}</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<!-- QR Scanner Library -->
+<script src="https://unpkg.com/html5-qrcode"
+        type="text/javascript"></script>
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <div class="card checkin-card">
+
+
+        <!-- HEADER -->
+
+        <div class="brand">
+
+            <div class="brand-badge">
+                📷
+            </div>
+
+            <h1>
+                Student Check-In
+            </h1>
+
+            <p class="subtitle">
+                {{ event_name }} — Entrance
+            </p>
+
+        </div>
+
+
+        <!-- SERVER MESSAGE -->
+
+        {% if message %}
+
+        <div class="alert
+            {% if message_type == 'success' %}
+                alert-success
+            {% elif message_type == 'info' %}
+                alert-success
+            {% else %}
+                alert-error
+            {% endif %}
+        ">
+
+            <strong>
+                {{ message }}
+            </strong>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- QR SCANNER -->
+
+        <div class="form-group">
+
+            <label>
+                Scan Student QR Code
+            </label>
+
+
+            <div
+                id="qr-reader"
+                style="
+                    width:100%;
+                    max-width:450px;
+                    margin:15px auto;
+                ">
+            </div>
+
+
+            <button
+                type="button"
+                id="startScanner"
+                class="btn-primary"
+                style="margin-top:10px;">
+
+                📷 Start QR Scanner
+
+            </button>
+
+
+            <p
+                id="scannerStatus"
+                style="
+                    text-align:center;
+                    margin-top:10px;
+                    font-weight:600;
+                ">
+            </p>
+
+        </div>
+
+
+        <!-- REGISTRATION ID -->
+
+        <form
+            method="POST"
+            action="{{ url_for('checkin') }}"
+            id="checkinForm">
+
+
+            <div class="form-group">
+
+                <label for="registration_id">
+                    Registration ID
+                </label>
+
+
+                <input
+                    type="text"
+                    id="registration_id"
+                    name="registration_id"
+                    placeholder="e.g. FP26-XXXXXXXX"
+                    value="{{ participant['registration_id'] if participant else '' }}"
+                    required
+                    autocomplete="off">
+
+
+            </div>
+
+
+            <!-- ACTION -->
+
+            <input
+                type="hidden"
+                name="action"
+                value="mark_checked_in">
+
+
+            <button
+                type="submit"
+                class="btn-primary">
+
+                ✅ Check In Student
+
+            </button>
+
+
+        </form>
+
+
+        <!-- STUDENT DETAILS -->
+
+        {% if participant %}
+
+        <div class="checkin-result">
+
+            <h2>
+                Student Details
+            </h2>
+
+
+            <div class="detail-list">
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Name
+                    </span>
+
+                    <strong>
+                        {{ participant['name'] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Registration ID
+                    </span>
+
+                    <strong>
+                        {{ participant['registration_id'] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Email
+                    </span>
+
+                    <strong>
+                        {{ participant['email'] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Mobile
+                    </span>
+
+                    <strong>
+                        {{ participant['mobile'] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Course
+                    </span>
+
+                    <strong>
+                        {{ participant['course'] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Year
+                    </span>
+
+                    <strong>
+                        {{ participant['year'] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Student ID
+                    </span>
+
+                    <strong>
+                        {{ participant['student_id'] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <span>
+                        Status
+                    </span>
+
+                    <strong>
+
+                        {% if participant['checked_in'] %}
+
+                        <span class="badge badge-success">
+                            ✅ Checked In
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge badge-pending">
+                            ⏳ Pending
+                        </span>
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                {% if participant['checkin_time'] %}
+
+                <div class="detail-row">
+
+                    <span>
+                        Check-In Time
+                    </span>
+
+                    <strong>
+                        {{ participant['checkin_time'] }}
+                    </strong>
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- BACK -->
+
+        <p class="admin-link">
+
+            <a href="{{ url_for('admin_dashboard') }}">
+                ← Back to Dashboard
+            </a>
+
+        </p>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/*
+==================================================
+QR SCANNER
+==================================================
+*/
+
+
+let qrScanner = null;
+
+let scannerRunning = false;
+
+let processingScan = false;
+
+
+const startButton =
+    document.getElementById("startScanner");
+
+
+const statusText =
+    document.getElementById("scannerStatus");
+
+
+const registrationInput =
+    document.getElementById("registration_id");
+
+
+const checkinForm =
+    document.getElementById("checkinForm");
+
+
+
+/*
+==================================================
+START SCANNER
+==================================================
+*/
+
+
+startButton.addEventListener(
+    "click",
+    function () {
+
+
+        if (scannerRunning) {
+
+            return;
+
+        }
+
+
+        statusText.textContent =
+            "📷 Camera starting...";
+
+
+        qrScanner =
+            new Html5Qrcode("qr-reader");
+
+
+        qrScanner.start(
+
+            {
+                facingMode: "environment"
+            },
+
+
+            {
+                fps: 10,
+
+                qrbox: {
+                    width: 250,
+                    height: 250
+                }
+            },
+
+
+            function (decodedText) {
+
+
+                /*
+                Prevent multiple scans
+                */
+
+                if (processingScan) {
+
+                    return;
+
+                }
+
+
+                processingScan = true;
+
+
+                console.log(
+                    "QR Scanned:",
+                    decodedText
+                );
+
+
+                /*
+                ==========================================
+                NEW QR FORMAT
+
+                QR contains ONLY:
+
+                FP26-XXXXXXXX
+                ==========================================
+                */
+
+
+                const registrationId =
+                    decodedText.trim();
+
+
+                /*
+                Check Registration ID format
+                */
+
+
+                if (
+                    !/^FP26-[A-Z0-9]+$/i.test(
+                        registrationId
+                    )
+                ) {
+
+
+                    statusText.textContent =
+                        "❌ Invalid Fresher Party QR Code.";
+
+
+                    processingScan = false;
+
+
+                    return;
+
+                }
+
+
+                /*
+                Put Registration ID
+                into input box
+                */
+
+
+                registrationInput.value =
+                    registrationId.toUpperCase();
+
+
+                statusText.textContent =
+                    "✅ QR detected: " +
+                    registrationId.toUpperCase();
+
+
+                /*
+                Stop scanner
+                */
+
+
+                qrScanner.stop()
+
+                    .then(
+                        function () {
+
+                            scannerRunning =
+                                false;
+
+
+                            /*
+                            Automatically submit
+                            check-in form
+                            */
+
+                            checkinForm.submit();
+
+                        }
+                    )
+
+                    .catch(
+                        function (error) {
+
+                            console.log(
+                                "Scanner stop error:",
+                                error
+                            );
+
+
+                            /*
+                            Submit anyway
+                            */
+
+                            checkinForm.submit();
+
+                        }
+                    );
+
+            },
+
+
+            function (errorMessage) {
+
+                /*
+                Normal scanner errors
+                are ignored.
+                */
+
+            }
+
+        )
+
+
+        .then(
+            function () {
+
+                scannerRunning =
+                    true;
+
+
+                statusText.textContent =
+                    "📷 Camera ready. Scan student's QR.";
+
+            }
+        )
+
+
+        .catch(
+            function (error) {
+
+                console.error(error);
+
+
+                scannerRunning =
+                    false;
+
+
+                statusText.textContent =
+                    "❌ Camera could not start. Please allow camera permission.";
+
+            }
+        );
+
+    }
+);
+
+
+
+/*
+==================================================
+MANUAL CHECK-IN VALIDATION
+==================================================
+*/
+
+
+checkinForm.addEventListener(
+    "submit",
+    function (event) {
+
+
+        const registrationId =
+            registrationInput.value.trim();
+
+
+        if (!registrationId) {
+
+
+            event.preventDefault();
+
+
+            alert(
+                "Please scan a QR code or enter Registration ID."
+            );
+
+
+            return false;
+
+        }
+
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
