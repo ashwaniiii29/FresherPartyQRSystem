@@ -1,162 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard | {{ event_name }}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+    Admin Dashboard | {{ event_name }}
+</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
 </head>
+
+
 <body>
 
 <div class="admin-page">
 
-  <div class="admin-topbar">
-    <h1>📊 Admin Dashboard</h1>
-    <div class="admin-topbar-actions">
-      <a href="{{ url_for('checkin') }}" class="btn-secondary small">✅ Check-In</a>
-      <a href="{{ url_for('admin_logout') }}" class="btn-secondary small">Logout</a>
-    </div>
-  </div>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <span class="stat-value">{{ total }}</span>
-      <span class="stat-label">Total Registrations</span>
-    </div>
+    <!-- =================================================
+         TOP BAR
+         ================================================= -->
 
-    <div class="stat-card">
-      <span class="stat-value">{{ checked_in_count }}</span>
-      <span class="stat-label">Checked In</span>
-    </div>
+    <div class="admin-topbar">
 
-    <div class="stat-card">
-      <span class="stat-value">{{ total - checked_in_count }}</span>
-      <span class="stat-label">Not Checked In</span>
-    </div>
-  </div>
+        <h1>
+            📊 Admin Dashboard
+        </h1>
 
-  <form method="GET" action="{{ url_for('admin_dashboard') }}" class="search-bar">
-    <input
-      type="text"
-      name="search"
-      placeholder="Search by name, reg ID, email, mobile, or student ID..."
-      value="{{ search }}"
-    >
 
-    <button type="submit" class="btn-primary small">
-      Search
-    </button>
+        <div class="admin-topbar-actions">
 
-    {% if search %}
-      <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary small">
-        Clear
-      </a>
-    {% endif %}
-  </form>
-
-  <div class="table-wrapper">
-    <table class="admin-table">
-
-      <thead>
-        <tr>
-          <th>QR / Pass</th>
-          <th>Reg. ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Mobile</th>
-          <th>Course</th>
-          <th>Year</th>
-          <th>Registered On</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        {% for p in participants %}
-
-        <tr>
-
-          <td>
-            <img
-              class="table-qr"
-              src="{{ url_for('qr_image', filename=p['qr_filename']) }}"
-              alt="QR"
-            >
-
-            <br>
 
             <a
-              href="{{ url_for('download_pass', registration_id=p['registration_id']) }}"
-              class="btn-secondary small"
+                href="{{ url_for('checkin') }}"
+                class="btn-secondary small"
             >
-              ⬇ Download Pass
+                ✅ Check-In
             </a>
-          </td>
 
-          <td>
-            {{ p['registration_id'] }}
-          </td>
 
-          <td>
-            {{ p['name'] }}
-          </td>
+            <a
+                href="{{ url_for('download_students') }}"
+                class="btn-primary small"
+            >
+                📥 Download Student Details
+            </a>
 
-          <td>
-            {{ p['email'] }}
-          </td>
 
-          <td>
-            {{ p['mobile'] }}
-          </td>
+            <a
+                href="{{ url_for('admin_logout') }}"
+                class="btn-secondary small"
+            >
+                Logout
+            </a>
 
-          <td>
-            {{ p['course'] }}
-          </td>
 
-          <td>
-            {{ p['year'] }}
-          </td>
+        </div>
 
-          <td>
-            {{ p['registration_date'] }}
-          </td>
+    </div>
 
-          <td>
-            {% if p['checked_in'] %}
 
-              <span class="badge badge-success">
+    <!-- =================================================
+         STATISTICS
+         ================================================= -->
+
+    <div class="stats-row">
+
+
+        <div class="stat-card">
+
+            <span class="stat-value">
+                {{ total }}
+            </span>
+
+            <span class="stat-label">
+                Total Registrations
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-value">
+                {{ checked_in_count }}
+            </span>
+
+            <span class="stat-label">
                 Checked In
-              </span>
+            </span>
 
-            {% else %}
+        </div>
 
-              <span class="badge badge-pending">
-                Pending
-              </span>
 
-            {% endif %}
-          </td>
+        <div class="stat-card">
 
-        </tr>
+            <span class="stat-value">
+                {{ total - checked_in_count }}
+            </span>
 
-        {% else %}
+            <span class="stat-label">
+                Not Checked In
+            </span>
 
-        <tr>
-          <td colspan="9" class="empty-row">
-            No participants found.
-          </td>
-        </tr>
+        </div>
 
-        {% endfor %}
 
-      </tbody>
+    </div>
 
-    </table>
-  </div>
+
+    <!-- =================================================
+         SEARCH
+         ================================================= -->
+
+    <form
+        method="GET"
+        action="{{ url_for('admin_dashboard') }}"
+        class="search-bar"
+    >
+
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by name, registration ID, mobile, or enrollment number..."
+            value="{{ search }}"
+        >
+
+
+        <button
+            type="submit"
+            class="btn-primary small"
+        >
+            Search
+        </button>
+
+
+        {% if search %}
+
+        <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="btn-secondary small"
+        >
+            Clear
+        </a>
+
+        {% endif %}
+
+
+    </form>
+
+
+    <!-- =================================================
+         PARTICIPANTS TABLE
+         ================================================= -->
+
+    <div class="table-wrapper">
+
+
+        <table class="admin-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        QR / Pass
+                    </th>
+
+                    <th>
+                        Reg. ID
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Mobile
+                    </th>
+
+                    <th>
+                        Enrollment Number
+                    </th>
+
+                    <th>
+                        Course
+                    </th>
+
+                    <th>
+                        Year
+                    </th>
+
+                    <th>
+                        Registered On
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for p in participants %}
+
+
+                <tr>
+
+
+                    <!-- QR / PASS -->
+
+                    <td>
+
+                        <img
+                            class="table-qr"
+                            src="{{ url_for('qr_image', filename=p['qr_filename']) }}"
+                            alt="QR"
+                        >
+
+                        <br>
+
+                        <a
+                            href="{{ url_for('download_pass', registration_id=p['registration_id']) }}"
+                            class="btn-secondary small"
+                        >
+                            ⬇ Download Pass
+                        </a>
+
+                    </td>
+
+
+                    <!-- REGISTRATION ID -->
+
+                    <td>
+                        {{ p['registration_id'] }}
+                    </td>
+
+
+                    <!-- NAME -->
+
+                    <td>
+                        {{ p['name'] }}
+                    </td>
+
+
+                    <!-- MOBILE -->
+
+                    <td>
+                        {{ p['mobile'] }}
+                    </td>
+
+
+                    <!-- ENROLLMENT NUMBER -->
+
+                    <td>
+                        {{ p['enrollment_number'] }}
+                    </td>
+
+
+                    <!-- COURSE -->
+
+                    <td>
+                        {{ p['course'] }}
+                    </td>
+
+
+                    <!-- YEAR -->
+
+                    <td>
+                        {{ p['year'] }}
+                    </td>
+
+
+                    <!-- REGISTERED DATE -->
+
+                    <td>
+                        {{ p['registration_date'] }}
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+
+                        {% if p['checked_in'] %}
+
+
+                        <span class="badge badge-success">
+                            ✅ Checked In
+                        </span>
+
+
+                        {% else %}
+
+
+                        <span class="badge badge-pending">
+                            ⏳ Pending
+                        </span>
+
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="empty-row"
+                    >
+                        No participants found.
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
 
 </div>
 
 </body>
+
 </html>

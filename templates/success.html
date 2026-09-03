@@ -117,6 +117,32 @@
             <div class="detail-row">
 
                 <span>
+                    Mobile Number
+                </span>
+
+                <strong>
+                    {{ participant['mobile'] }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+                    Enrollment Number
+                </span>
+
+                <strong>
+                    {{ participant['enrollment_number'] }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
                     Course
                 </span>
 
@@ -130,11 +156,24 @@
             <div class="detail-row">
 
                 <span>
-                    Year
+                    Year / Semester
                 </span>
 
                 <strong>
                     {{ participant['year'] }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+                    Gender
+                </span>
+
+                <strong>
+                    {{ participant['gender'] }}
                 </strong>
 
             </div>
@@ -167,6 +206,14 @@
                 class="btn-secondary"
             >
                 ⬇ Download QR
+            </a>
+
+
+            <a
+                href="{{ url_for('download_pass', registration_id=participant['registration_id']) }}"
+                class="btn-secondary"
+            >
+                🎫 Download Pass
             </a>
 
 

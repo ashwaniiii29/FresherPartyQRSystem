@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -14,7 +15,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
       rel="stylesheet">
 
-<!-- QR Scanner Library -->
 <script src="https://unpkg.com/html5-qrcode"
         type="text/javascript"></script>
 
@@ -131,11 +131,10 @@
                     type="text"
                     id="registration_id"
                     name="registration_id"
-                    placeholder="e.g. FP26-XXXXXXXX"
+                    placeholder="e.g. FP26-0001"
                     value="{{ participant['registration_id'] if participant else '' }}"
                     required
                     autocomplete="off">
-
 
             </div>
 
@@ -174,6 +173,8 @@
             <div class="detail-list">
 
 
+                <!-- NAME -->
+
                 <div class="detail-row">
 
                     <span>
@@ -186,6 +187,8 @@
 
                 </div>
 
+
+                <!-- REGISTRATION ID -->
 
                 <div class="detail-row">
 
@@ -200,18 +203,7 @@
                 </div>
 
 
-                <div class="detail-row">
-
-                    <span>
-                        Email
-                    </span>
-
-                    <strong>
-                        {{ participant['email'] }}
-                    </strong>
-
-                </div>
-
+                <!-- MOBILE -->
 
                 <div class="detail-row">
 
@@ -226,6 +218,23 @@
                 </div>
 
 
+                <!-- ENROLLMENT NUMBER -->
+
+                <div class="detail-row">
+
+                    <span>
+                        Enrollment Number
+                    </span>
+
+                    <strong>
+                        {{ participant['enrollment_number'] }}
+                    </strong>
+
+                </div>
+
+
+                <!-- COURSE -->
+
                 <div class="detail-row">
 
                     <span>
@@ -239,10 +248,12 @@
                 </div>
 
 
+                <!-- YEAR -->
+
                 <div class="detail-row">
 
                     <span>
-                        Year
+                        Year / Semester
                     </span>
 
                     <strong>
@@ -252,18 +263,22 @@
                 </div>
 
 
+                <!-- GENDER -->
+
                 <div class="detail-row">
 
                     <span>
-                        Student ID
+                        Gender
                     </span>
 
                     <strong>
-                        {{ participant['student_id'] }}
+                        {{ participant['gender'] }}
                     </strong>
 
                 </div>
 
+
+                <!-- STATUS -->
 
                 <div class="detail-row">
 
@@ -291,6 +306,8 @@
 
                 </div>
 
+
+                <!-- CHECK-IN TIME -->
 
                 {% if participant['checkin_time'] %}
 
@@ -336,12 +353,9 @@
 <script>
 
 
-/*
-==================================================
-QR SCANNER
-==================================================
-*/
-
+// ========================================================
+// QR SCANNER
+// ========================================================
 
 let qrScanner = null;
 
@@ -366,13 +380,9 @@ const checkinForm =
     document.getElementById("checkinForm");
 
 
-
-/*
-==================================================
-START SCANNER
-==================================================
-*/
-
+// ========================================================
+// START SCANNER
+// ========================================================
 
 startButton.addEventListener(
     "click",
@@ -414,9 +424,7 @@ startButton.addEventListener(
             function (decodedText) {
 
 
-                /*
-                Prevent multiple scans
-                */
+                // Prevent multiple scans
 
                 if (processingScan) {
 
@@ -434,25 +442,13 @@ startButton.addEventListener(
                 );
 
 
-                /*
-                ==========================================
-                NEW QR FORMAT
-
-                QR contains ONLY:
-
-                FP26-XXXXXXXX
-                ==========================================
-                */
-
+                // QR contains only Registration ID
 
                 const registrationId =
                     decodedText.trim();
 
 
-                /*
-                Check Registration ID format
-                */
-
+                // Validate Registration ID
 
                 if (
                     !/^FP26-[A-Z0-9]+$/i.test(
@@ -460,24 +456,17 @@ startButton.addEventListener(
                     )
                 ) {
 
-
                     statusText.textContent =
                         "❌ Invalid Fresher Party QR Code.";
 
-
                     processingScan = false;
-
 
                     return;
 
                 }
 
 
-                /*
-                Put Registration ID
-                into input box
-                */
-
+                // Put Registration ID in input
 
                 registrationInput.value =
                     registrationId.toUpperCase();
@@ -488,10 +477,7 @@ startButton.addEventListener(
                     registrationId.toUpperCase();
 
 
-                /*
-                Stop scanner
-                */
-
+                // Stop scanner
 
                 qrScanner.stop()
 
@@ -502,10 +488,7 @@ startButton.addEventListener(
                                 false;
 
 
-                            /*
-                            Automatically submit
-                            check-in form
-                            */
+                            // Automatically submit
 
                             checkinForm.submit();
 
@@ -521,9 +504,7 @@ startButton.addEventListener(
                             );
 
 
-                            /*
-                            Submit anyway
-                            */
+                            // Submit anyway
 
                             checkinForm.submit();
 
@@ -535,10 +516,7 @@ startButton.addEventListener(
 
             function (errorMessage) {
 
-                /*
-                Normal scanner errors
-                are ignored.
-                */
+                // Normal scanner errors ignored
 
             }
 
@@ -579,13 +557,9 @@ startButton.addEventListener(
 );
 
 
-
-/*
-==================================================
-MANUAL CHECK-IN VALIDATION
-==================================================
-*/
-
+// ========================================================
+// MANUAL CHECK-IN VALIDATION
+// ========================================================
 
 checkinForm.addEventListener(
     "submit",
@@ -598,7 +572,6 @@ checkinForm.addEventListener(
 
         if (!registrationId) {
 
-
             event.preventDefault();
 
 
@@ -610,7 +583,6 @@ checkinForm.addEventListener(
             return false;
 
         }
-
 
     }
 );

@@ -89,7 +89,7 @@
         >
 
 
-            <!-- NAME + EMAIL -->
+            <!-- NAME + MOBILE -->
 
             <div class="form-row">
 
@@ -119,36 +119,6 @@
 
                 <div class="form-group">
 
-                    <label for="email">
-                        Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="you@example.com"
-                        value="{{ form_data.get('email', '') }}"
-                        autocomplete="email"
-                        required
-                    >
-
-                    <span
-                        class="error-text"
-                        id="err-email">
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- MOBILE + STUDENT ID -->
-
-            <div class="form-row">
-
-                <div class="form-group">
-
                     <label for="mobile">
                         Mobile Number
                     </label>
@@ -172,36 +142,36 @@
 
                 </div>
 
+            </div>
+
+
+            <!-- ENROLLMENT NUMBER + COURSE -->
+
+            <div class="form-row">
 
                 <div class="form-group">
 
-                    <label for="student_id">
-                        College / Student ID
+                    <label for="enrollment_number">
+                        Enrollment Number
                     </label>
 
                     <input
                         type="text"
-                        id="student_id"
-                        name="student_id"
-                        placeholder="e.g. BCA2024015"
-                        value="{{ form_data.get('student_id', '') }}"
+                        id="enrollment_number"
+                        name="enrollment_number"
+                        placeholder="e.g. 2024BCA001"
+                        value="{{ form_data.get('enrollment_number', '') }}"
                         autocomplete="off"
                         required
                     >
 
                     <span
                         class="error-text"
-                        id="err-student_id">
+                        id="err-enrollment_number">
                     </span>
 
                 </div>
 
-            </div>
-
-
-            <!-- COURSE + YEAR -->
-
-            <div class="form-row">
 
                 <div class="form-group">
 
@@ -295,6 +265,12 @@
 
                 </div>
 
+            </div>
+
+
+            <!-- YEAR + GENDER -->
+
+            <div class="form-row">
 
                 <div class="form-group">
 
@@ -358,12 +334,6 @@
 
                 </div>
 
-            </div>
-
-
-            <!-- GENDER -->
-
-            <div class="form-row">
 
                 <div class="form-group">
 
